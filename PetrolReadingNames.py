@@ -26,11 +26,11 @@ imageGray.save("./SavedOutcomesPPReading/imageSave32.png")
 
 #extracting the printing the text from the gray image
 imageExtractedText1 = pytesseract.image_to_string(imageGray)
-custom_config = r'-c tessedit_char_whitelist=0123456789 --psm 6'
+custom_config = r'-c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyz --psm 6'
 text = pytesseract.image_to_string(imageGray, config=custom_config)
 
 print('Gray Image Analysis' , imageExtractedText1)
-print('NumOnly =', text)
+print('WordOnly =', text)
 
 #GRAY, RESIZED, BRIGHTENED AND CONTRASTED IMAGE
 #making the image into grayscale, resizing with a scalefactor of 2, increasing brighness by 50% and contrast by 20%
@@ -54,7 +54,7 @@ imageGrayResizedBrightenedContrasted.save("./SavedOutcomesPPReading/imageSave7.p
 
 
 imageExtractedText2 = pytesseract.image_to_string(imageGrayResizedBrightenedContrasted)
-custom_config = r'-c tessedit_char_whitelist=0123456789 --psm 6'
+custom_config = r'-c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyz --psm 6'
 text2 = pytesseract.image_to_string(imageGrayResizedBrightenedContrasted, config=custom_config)
 print('Gray, Contrast, Brightened, Scaled Image Analysis' , imageExtractedText2)
-print('NumOnly2 =', text2)
+print('WordOnly2 =', text2)

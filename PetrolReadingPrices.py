@@ -54,7 +54,7 @@ imageGrayResizedBrightenedContrasted.save("./SavedOutcomesPPReading/imageSave7.p
 
 
 imageExtractedText2 = pytesseract.image_to_string(imageGrayResizedBrightenedContrasted)
-custom_config = r'-c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyz --psm 6'
+custom_config = r'-c tessedit_char_whitelist=0123456789 --psm 6'
 text2 = pytesseract.image_to_string(imageGrayResizedBrightenedContrasted, config=custom_config)
 print('Gray, Contrast, Brightened, Scaled Image Analysis' , imageExtractedText2)
 print('NumOnly2 =', text2)
