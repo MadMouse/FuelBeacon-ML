@@ -11,7 +11,7 @@ import pytesseract
 
 #ORIGINAL IMAGE
 #importing the image under the name imageIn
-imageIn = Image.open("./PetrolPrices/petrolprice1.png")
+imageIn = Image.open("./PetrolPrices/petrolprice6.png")
 
 #extracting and printing the text from the original image
 #imageExtractedText = pytesseract.image_to_string(imageIn)
@@ -22,7 +22,7 @@ imageIn = Image.open("./PetrolPrices/petrolprice1.png")
 imageGray = ImageOps.grayscale(imageIn)
 
 #saving the grayscale image to the file name imageSave1.png
-imageGray.save("./SavedOutcomesPNReading/imageSave1.png")
+imageGray.save("./SavedOutcomesPNReading/imageSave6.png")
 
 #extracting the printing the text from the gray image
 imageExtractedText1 = pytesseract.image_to_string(imageGray)
@@ -50,7 +50,7 @@ contrastFactor = 1.2
 enhancerContrast = ImageEnhance.Contrast(imageGrayResizedBrightened)
 imageGrayResizedBrightenedContrasted = enhancerContrast.enhance(contrastFactor)
 
-imageGrayResizedBrightenedContrasted.save("./SavedOutcomesPNReading/imageSave1Alt.png")
+imageGrayResizedBrightenedContrasted.save("./SavedOutcomesPNReading/imageSave6Alt.png")
 
 
 imageExtractedText2 = pytesseract.image_to_string(imageGrayResizedBrightenedContrasted)
