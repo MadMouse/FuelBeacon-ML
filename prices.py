@@ -23,7 +23,7 @@ def normalize_ocr_number(text: str) -> str:
 
 
 # 1. Load image
-img = cv2.imread('/Users/aimerydrewery/Desktop/Work/StartUp/PetrolPrices/petrolPriceCrop6.png')
+img = cv2.imread('/Users/aimerydrewery/Desktop/Work/StartUp/PetrolPrices/petrolPriceCrop5.png')
 
 # 2. Preprocess image for LED/7-segment displays
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
