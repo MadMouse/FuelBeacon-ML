@@ -27,7 +27,7 @@ model = genai.GenerativeModel(
 )
 
 # 3. Process the image
-image = Image.open("PetrolPrices/petrolprice4.png")
+image = Image.open("PetrolPrices/petrolprice5.png")
 prompt = "Analyze this image and extract fuel names along with their unit prices and return in json."
 
 response = model.generate_content([image, prompt])
