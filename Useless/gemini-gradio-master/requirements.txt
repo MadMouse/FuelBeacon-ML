@@ -1,0 +1,9 @@
+google-generativeai
+gradio>=5.9.1
+websockets
+numpy
+gradio-webrtc
+twilio
+Pillow
+opencv-python
+librosa
