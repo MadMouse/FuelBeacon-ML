@@ -4,22 +4,56 @@ process_photo.py
 Extracts metadata from a local image and calls Google's Gemini 3.6 Flash model
 with Google Search grounding to verify facts found in the image and its metadata.
 """
-
+import array
 import argparse
 import json
 import os
 import sys
-from typing import Any, Dict
+from typing import Any, Dict, Optional, List
 
 from google import genai
 from google.genai import types
 from PIL import Image
 from PIL.ExifTags import GPSTAGS, TAGS
+from pydantic import BaseModel, Field
 
 from dotenv import load_dotenv
 import os
  
 load_dotenv()
+
+class Coordinates(BaseModel):
+    latitude: Optional[float] = Field(description="Latitude coordinate of the location")
+    longitude: Optional[float] = Field(description="Longitude coordinate of the location")
+
+class Location(BaseModel):
+    name: str = Field(description="Name of the fuel station or venue")
+    address: str = Field(description="Full physical address")
+    coordinates: Optional[Coordinates] = Field(description="Geographic coordinates")
+
+class Transaction(BaseModel):
+    cost_gbp: float = Field(description="Total cost of the transaction in GBP")
+    fuel_dispensed_litres: float = Field(description="Volume of fuel dispensed in litres")
+    fuel_type_dispensed: str = Field(description="Fuel type selected for this transaction")
+    #price_per_litre_gbp: float = Field(description="Price per litre in GBP for the dispensed fuel")
+
+class PriceDetail(BaseModel):
+    fuel_type: str = Field(description="Fuel Type")
+    price_per_litre_pence: float = Field(description="Price per litre in pence")
+    #price_per_litre_gbp: float = Field(description="Price per litre in GBP")
+
+class FuelPrices(BaseModel):
+    prices: List[PriceDetail]
+    #diesel: Optional[PriceDetail] = Field(default=None, description="Price details for Diesel")
+    #super_fuel_premium_unleaded_97: Optional[PriceDetail] = Field(
+    #    default=None, description="Price details for Super / Premium Unleaded fuel")
+    #unleaded: Optional[PriceDetail] = Field(default=None, description="Price details for standard Unleaded fuel")
+
+class FuelTransactionSchema(BaseModel):
+    location: Location
+    date_time: str = Field(description="Timestamp in format YYYY-MM-DD HH:MM:SS (tz)")
+    transaction: Transaction
+    fuel_prices: FuelPrices
 
 def extract_metadata(image_path: str) -> Dict[str, Any]:
     """Extracts standard EXIF metadata and GPS data from an image file."""
@@ -81,14 +115,9 @@ def verify_image_with_gemini(image_path: str, metadata: Dict[str, Any]) -> str:
     ```json
     {metadata_json}
     ```
-
-    Please perform the following steps:
-    1. Check for location details (GPS coordinates, landmarks, text signs) and verify if the visual scene matches the metadata location.
-    2. Identify any notable entities, buildings, events, or objects in the photo and verify real-world facts about them using Web Search.
-    3. Point out any potential inconsistencies between the EXIF metadata (timestamp, camera model, GPS) and what is visually present in the image.
     """
 
-    print("Calling Gemini 3.6 Flash with Google Search verification...\n")
+    #print("Calling Gemini 3.6 Flash with Google Search verification...\n")
 
     # Call Gemini 3.6 Flash with Google Search enabled
     response = client.models.generate_content(
@@ -97,6 +126,8 @@ def verify_image_with_gemini(image_path: str, metadata: Dict[str, Any]) -> str:
         config=types.GenerateContentConfig(
             tools=[{"google_search": {}}],  # Enable web search grounding
             temperature=0.2,
+            response_mime_type="application/json",
+            response_schema=FuelTransactionSchema
         ),
     )
 
@@ -114,18 +145,18 @@ def main():
         sys.exit(f"Error: File '{args.image_path}' not found.")
 
     print(f"Processing image: {args.image_path}")
-    print("-" * 50)
+    #print("-" * 50)
 
     # 1. Extract EXIF & metadata
     metadata = extract_metadata(args.image_path)
-    print("Extracted Metadata:")
-    print(json.dumps(metadata, indent=2, default=str))
-    print("-" * 50)
+    #print("Extracted Metadata:")
+    #print(json.dumps(metadata, indent=2, default=str))
+    #print("-" * 50)
 
     # 2. Verify with Gemini 3.6 Flash
     verification_report = verify_image_with_gemini(args.image_path, metadata)
 
-    print("\nVerification Results:\n")
+    #print("\nVerification Results:\n")
     print(verification_report)
 
 
